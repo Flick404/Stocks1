@@ -1,0 +1,7 @@
+Flask
+requests
+gunicorn
+flask_apscheduler
+matplotlib
+scipy
+numpy
