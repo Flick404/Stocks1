@@ -5,7 +5,6 @@ import requests
 from flask_apscheduler import APScheduler
 import traceback
 
-import psycopg
 import os
 
 import requests
