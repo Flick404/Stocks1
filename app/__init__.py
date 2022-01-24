@@ -42,8 +42,8 @@ def job1(of = False):
         for s in resp:
             str(s[i])
             strok += str(s[i]) + '\n'
-        verni.append(strok)
-   
+        verni.append(strok[:-1])
+    
     r, g, b = 1, 1, 1
 
     fig = plt.figure(figsize=(24, 11), facecolor=(0, 0, 0), edgecolor=(0, 0, 0))
