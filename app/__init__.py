@@ -14,21 +14,36 @@ import numpy as np
 import matplotlib.colors as mcolors
 from matplotlib.patches import Polygon
 
+interval = '1d'
+dlit = '10d'
+portfolio = {'AAPL': 15, 'NEE': 27, 'MA': 5, 'JPM': 12, 'MSFT': 5, 'AMAT': 8, 'TSLA': 1, 'NVDA': 1}
+buyprice = {'AAPL': 172.609333, 'NEE': 85.95963, 'MA': 370.98, 'JPM': 165.899167, 'MSFT': 313.97, 'AMAT': 156.79, 'TSLA': 1089.63, 'NVDA': 277.3}
+data = [0]*10
 
+verni = []
 
 def job1(of = False):
-    interval = '1d'
-    dlit = '10d'
-
-    portfolio = {'AAPL': 15, 'NEE': 27, 'MA': 5, 'JPM': 12, 'MSFT': 5, 'AMAT': 8, 'TSLA': 1, 'NVDA': 1}
+    global verni
 
     data = [0]*10
+    resp = []
 
     for ticker, quantity in portfolio.items():
         price = requests.get(f'https://query1.finance.yahoo.com/v8/finance/chart/{ticker}?interval={interval}&range={dlit}',headers={'User-Agent': 'zip'}).json()['chart']['result'][0]['indicators']['adjclose'][0]['adjclose']
         for day, p in enumerate(price):
             data[day] += p*quantity
+        
+        resp.append([ticker, round(buyprice[ticker], 2), round(price[-1], 2), round((price[-1] - buyprice[ticker]) * quantity, 2), round((price[-1] / buyprice[ticker] - 1) * 100, 2), round((price[-1] - price[-2]) * quantity, 2), round((price[-1] / price[-2] - 1) * 100, 2)])
+            
+    verni = []
 
+    for i in range(len(resp[0])):
+        strok = ''
+        for s in resp:
+            str(s[i])
+            strok += str(s[i]) + '\n'
+        verni.append(strok)
+   
     r, g, b = 1, 1, 1
 
     fig = plt.figure(figsize=(24, 11), facecolor=(0, 0, 0), edgecolor=(0, 0, 0))
@@ -99,6 +114,10 @@ app.config.from_object(Config())
 @app.route('/')
 def ics():
     return send_from_directory('', 'report.png')
+
+@app.route('/info')
+def info():
+    return {'data': verni}
 
 job1()
 scheduler = APScheduler()
